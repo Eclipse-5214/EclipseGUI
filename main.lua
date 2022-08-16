@@ -2,7 +2,7 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHept
 local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
 
 --Petsim--
-if game.PlaceID == 6284583030 then
+
     local players = game:GetService("Players")
     local client = players.LocalPlayer
 
@@ -596,5 +596,5 @@ if game.PlaceID == 6284583030 then
             end
         end
     )
-end
+
 
