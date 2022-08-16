@@ -346,7 +346,6 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
          end
     end)
 
-    MainSection:NewLabel("Created By Eclipse5214")
     local farmingTab = Window:NewTab("Farming")
     do
         local farmingSection = farmingTab:NewSection("Farming")
