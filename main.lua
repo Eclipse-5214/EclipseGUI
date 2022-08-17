@@ -9,7 +9,6 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
     local GameLibrary = require(game:GetService("ReplicatedStorage"):WaitForChild("Framework"):WaitForChild("Library"))
     local Network = GameLibrary.Network
 
-    local Library = require(game:GetService("ReplicatedStorage").Framework.Library)
     local IDToName = {}
     local NameToID = {}
     for i,v in pairs(Library.Directory.Pets ) do
