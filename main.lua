@@ -323,20 +323,6 @@ end)
         end
     end)
 
-    MiscSection:NewButton("AntiKick", "AntiKick", function()
-        inform("Loaded",2)
-        local mt = getrawmetatable(game)
-        local oldmt = mt.index
-        make_writeable(mt)
-        
-        mt.index = function(t,i)
-        if i == "Kick" then
-            return nil
-        end
-        return oldmt(t,i)
-        end
-    end)
-
     MiscSection:NewButton("Show Hidden Pet Chance (synapse x only)", "Shows hidden pet chance", function()
         workspace.__MAP.Eggs.DescendantAdded:Connect(function(a)
             if a.Name == 'EggInfo' then
@@ -663,3 +649,4 @@ end)
             end
         end
     )
+
