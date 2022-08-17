@@ -56,6 +56,8 @@ end)
         NameToID[v.name] = i
     end
 
+    workspace.__THINGS.__REMOTES.MAIN:FireServer("a", "claim orbs")
+
     local runService = game:GetService("RunService")
 
     local areas = {
@@ -477,7 +479,23 @@ end)
                 "Auto Collect Orbs",
                 "Automatically Collects all Orbs",
                 function(bool)
-                    flags:SetFlag("autoCollectOrbs", bool)
+                    if bool == true then
+                        _G.CollectOrbs = true
+                    elseif bool == false then
+                        _G.CollectOrbs = false
+                        end
+                    
+                    function CollectOrbs()
+                       local ohTable1 = {[1] = {}}
+                       for i,v in pairs(game.workspace['__THINGS'].Orbs:GetChildren()) do
+                           ohTable1[1][i] = v.Name
+                            end
+                       game.workspace['__THINGS']['__REMOTES']["claim orbs"]:FireServer(ohTable1)
+                        end
+                    
+                    while wait() and _G.CollectOrbs do
+                          pcall(function() CollectOrbs() end)
+                    end
                 end
             )
 
@@ -485,7 +503,31 @@ end)
                 "Auto Collect Lootbags",
                 "Automatically Collects all Lootbags",
                 function(bool)
-                    flags:SetFlag("autoCollectLootbags", bool)
+                    if bool then
+                        local Running = {}
+                        while wait() and bool do
+                            for i, v in pairs(game:GetService("Workspace")["__THINGS"].Lootbags:GetChildren()) do
+                                spawn(function()
+                                    if v ~= nil and v.ClassName == 'MeshPart' then
+                                        if not Running[v.Name] then
+                                            Running[v.Name] = true
+                                            local StartTick = tick()
+                                            v.Transparency = 1
+                                            for a,b in pairs(v:GetChildren()) do
+                                                if not string.find(b.Name, "Body") then
+                                                    b:Destroy()
+                                                end
+                                            end
+                                            repeat task.wait()
+                                                v.CFrame = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").CFrame
+                                            until v == nil or not v.Parent or tick() > StartTick + 3
+                                            Running[v.Name] = nil
+                                        end
+                                    end
+                                end)
+                            end
+                        end
+                    end
                 end
             )
         end
