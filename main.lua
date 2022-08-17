@@ -57,6 +57,8 @@ end)
     end
 
     workspace.__THINGS.__REMOTES.MAIN:FireServer("a", "claim orbs")
+    workspace.__THINGS.__REMOTES.MAIN:FireServer("b", "redeem rank rewards")
+    workspace.__THINGS.__REMOTES.MAIN:FireServer("b", "redeem vip rewards")
 
     local runService = game:GetService("RunService")
 
@@ -324,6 +326,19 @@ end)
             wait(0)    
         end
     end)
+
+    MiscSection:NewToggle("Auto Collect Rewards","Auto collects rewards", function(autorewards)
+        if autorewards == true then
+            _G.AutoRewards1 = true
+        elseif autorewards == false then
+            _G.AutoRewards1 = false
+        end
+        
+        while task.wait() and _G.AutoRewards1 do
+            workspace.__THINGS.__REMOTES["redeem vip rewards"]:InvokeServer({})
+            workspace.__THINGS.__REMOTES["redeem rank rewards"]:InvokeServer({})			
+        end
+        end)
 
     MiscSection:NewButton("Show Hidden Pet Chance (synapse x only)", "Shows hidden pet chance", function()
         workspace.__MAP.Eggs.DescendantAdded:Connect(function(a)
