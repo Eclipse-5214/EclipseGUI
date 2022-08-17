@@ -6,6 +6,17 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
     local players = game:GetService("Players")
     local client = players.LocalPlayer
 
+    local GameLibrary = require(game:GetService("ReplicatedStorage"):WaitForChild("Framework"):WaitForChild("Library"))
+    local Network = GameLibrary.Network
+
+    local Library = require(game:GetService("ReplicatedStorage").Framework.Library)
+    local IDToName = {}
+    local NameToID = {}
+    for i,v in pairs(Library.Directory.Pets ) do
+        IDToName[i] = v.name
+        NameToID[v.name] = i
+    end
+
     local runService = game:GetService("RunService")
 
     local areas = {
@@ -61,17 +72,15 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
     end
 
     function PetSim:GetPetIds()
-        local ret = {}
-        for _, value in pairs(getgc(true)) do
-            if
-                type(value) == "table" and rawget(value, "uid") and
-                    tostring(value.owner) == tostring(game.Players.LocalPlayer)
-            then
-                table.insert(ret, value.uid)
+        local returntable = {}
+        for i,v in pairs(GameLibrary.Save.Get().Pets) do
+            if v.e then 
+                table.insert(returntable, v.uid)
             end
         end
-        return ret
+        return returntable
     end
+    
 
     function PetSim:GetAllCoinsInArea(area)
         local ret = {}
@@ -281,7 +290,7 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
         end
     end)
 
-    MiscSection:NewButton("Show Hidden Pet Chance", "Shows hidden pet chance", function()
+    MiscSection:NewButton("Show Hidden Pet Chance (synapse x only)", "Shows hidden pet chance", function()
         workspace.__MAP.Eggs.DescendantAdded:Connect(function(a)
             if a.Name == 'EggInfo' then
                 for i,v in pairs(a.Frame.Pets:GetChildren()) do
@@ -595,5 +604,4 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
             end
         end
     )
-
 
