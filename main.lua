@@ -1,6 +1,45 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
 local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
 
+local Main = Window:NewTab("Main")
+local MainSection = Main:NewSection("MainSection")
+
+MainSection:NewLabel("Created By Eclipse5214")
+
+MainSection:NewKeybind("Toggle UI", "Toggles the UI", Enum.KeyCode.RightShift, function()
+    Library:ToggleUI()
+end)
+
+MainSection:NewButton("Anti Afk", "no kicks", function()
+    MainSection:UpdateSection("Sucsess")
+    wait(1)
+    print("Anti Afk Loaded")
+    local GC = getconnections or get_signal_cons
+    if GC then
+        for i,v in pairs(GC(game.Players.LocalPlayer.Idled)) do
+            if v["Disable"] then
+                v["Disable"](v)
+            elseif v["Disconnect"] then
+                v["Disconnect"](v)
+            end
+        end
+    else
+        print("lol bad exploit")
+        local vu = game:GetService("VirtualUser")
+        game:GetService("Players").LocalPlayer.Idled:connect(function()
+            vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+            wait(1)
+            vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+        end)
+    end
+
+    local VirtualUser=game:service'VirtualUser'
+    game:service'Players'.LocalPlayer.Idled:connect(function()
+    VirtualUser:CaptureController()
+    VirtualUser:ClickButton2(Vector2.new())
+    end)
+end)
+
 --Petsim--
 
     local players = game:GetService("Players")
@@ -9,6 +48,7 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
     local GameLibrary = require(game:GetService("ReplicatedStorage"):WaitForChild("Framework"):WaitForChild("Library"))
     local Network = GameLibrary.Network
 
+    local Library = require(game:GetService("ReplicatedStorage").Framework.Library)
     local IDToName = {}
     local NameToID = {}
     for i,v in pairs(Library.Directory.Pets ) do
@@ -51,6 +91,9 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
     -- // Pet Simualtor Functions
     --#region Pet Simualtor Functions
     -- local area = flags.autoFarmArea
+
+    local pathToScript = game.Players.LocalPlayer.PlayerScripts.Scripts.Game['Open Eggs']
+    local oldFunc = getsenv(pathToScript).OpenEgg
 
     local PetSim = {}
 
@@ -185,16 +228,7 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
 
     -- // UI Library
 
-    --main--
-
-    local Main = Window:NewTab("Main")
-    local MainSection = Main:NewSection("MainSection")
-
-    MainSection:NewLabel("Created By Eclipse5214")
-
-    MainSection:NewKeybind("Toggle UI", "Toggles the UI", Enum.KeyCode.RightShift, function()
-        Library:ToggleUI()
-    end)
+    --misc--
     
     local Misc = Window:NewTab("Misc")
     local MiscSection = Misc:NewSection("MiscSection")
@@ -286,6 +320,20 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
             
             workspace.__THINGS.__REMOTES:FindFirstChild("redeem free gift"):InvokeServer(unpack(args))
             wait(0)    
+        end
+    end)
+
+    MiscSection:NewButton("AntiKick", "AntiKick", function()
+        inform("Loaded",2)
+        local mt = getrawmetatable(game)
+        local oldmt = mt.index
+        make_writeable(mt)
+        
+        mt.index = function(t,i)
+        if i == "Kick" then
+            return nil
+        end
+        return oldmt(t,i)
         end
     end)
 
@@ -538,7 +586,19 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
                     flags:SetFlag("useTripleHatch", bool)
                 end
             )
+            openingSection:NewToggle("Remove Egg Animation","Remove Egg Animation Reduce Hatch Lag", function(state)
+                if state == true then 
+                    getsenv(pathToScript).OpenEgg = function() return end 
+                else
+                    getsenv(pathToScript).OpenEgg = oldFunc
+                end 
+            end)
         end
+
+        
+
+
+
 
         local playerTab = Window:NewTab("Player")
         do
@@ -603,4 +663,3 @@ local Window = Library.CreateLib("EclipseGUI", "DarkTheme")
             end
         end
     )
-
