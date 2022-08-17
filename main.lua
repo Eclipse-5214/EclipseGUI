@@ -212,7 +212,7 @@ end)
     local MiscSection = Misc:NewSection("MiscSection")
 
     MiscSection:NewToggle("Auto Claim Gifts", "Auto claims gifts", function(state)
-        if state then
+        while state do
             local args = {
                 [1] = {
                     [1] = 1
